@@ -5,9 +5,10 @@ export const validateEmail = (email: string): string => {
 
 export const validateCPF = (cpf: string): string => {
     const formattedValue = cpf.replace(/\D/g, '');
-    if (formattedValue.length === 0) return ''; // Se o campo estiver vazio, não exibe erro
-    if (formattedValue.length < 11) return 'CPF incompleto'; // Se o CPF estiver incompleto, exibe erro
-    
+
+    // Verifica se o CPF está completo
+    if (formattedValue.length !== 11) return 'CPF inválido';
+
     // Validação do CPF
     const cpfNumbers = formattedValue.substring(0, 9);
     const cpfDigits = formattedValue.substring(9);
@@ -40,20 +41,9 @@ export const validateCPF = (cpf: string): string => {
 
     if (parseInt(cpfDigits[1]) !== secondDigit) return 'CPF inválido';
 
-    // Aplicação da máscara de digitação
-    let maskedCPF = formattedValue.substring(0, 3);
-    if (formattedValue.length > 3) {
-        maskedCPF += '.' + formattedValue.substring(3, 6);
-        if (formattedValue.length > 6) {
-            maskedCPF += '.' + formattedValue.substring(6, 9);
-            if (formattedValue.length > 9) {
-                maskedCPF += '-' + formattedValue.substring(9, 11);
-            }
-        }
-    }
-
-    return maskedCPF;
+    return ''; 
 };
+
 
 export const validateFullName = (fullName: string): string => {
     const fullNameRegex = /^[a-zA-Z]+\s+[a-zA-Z]+$/;
@@ -61,8 +51,16 @@ export const validateFullName = (fullName: string): string => {
 };
 
 export const validatePassword = (password: string): string => {
+    if (password.length === 0) return 'Campo obrigatório';
+
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password) ? '' : 'A senha deve conter pelo menos 8 caracteres, incluindo maiúsculas, minúsculas e um caractere especial';
+};
+
+export const validatePasswordConfirmation = (password: string, confirmPassword: string): string => {
+    if (confirmPassword.length === 0) return 'Campo obrigatório';
+
+    return password === confirmPassword ? '' : 'As senhas não coincidem';
 };
 
 export const fetchAddressByCep = async (cep: string): Promise<{ street: string; city: string } | undefined> => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { validateEmail, validateCPF, validateFullName, validatePassword, fetchAddressByCep } from '../../validations/registerValidations';
+import { validateEmail, validateCPF, validateFullName, validatePassword, validatePasswordConfirmation, fetchAddressByCep } from '../../validations/registerValidations';
 
 export const useRegisterEvents = () => {
     const [formData, setFormData] = useState({
@@ -9,6 +9,7 @@ export const useRegisterEvents = () => {
         cpf: '',
         email: '',
         password: '',
+        confirmPassword: '',
         cep: '',
         street: '',
         city: '',
@@ -19,6 +20,7 @@ export const useRegisterEvents = () => {
         cpf: '',
         email: '',
         password: '',
+        confirmPassword: '',
         cep: '',
         street: '',
         city: '',
@@ -53,6 +55,12 @@ export const useRegisterEvents = () => {
             setErrors({
                 ...errors,
                 password: validatePassword(value),
+                confirmPassword: validatePasswordConfirmation(value, formData.confirmPassword), // Verificar a confirmação de senha ao alterar a senha
+            });
+        } else if (name === 'confirmPassword') {
+            setErrors({
+                ...errors,
+                confirmPassword: validatePasswordConfirmation(formData.password, value), // Verificar a confirmação de senha ao alterar a confirmação de senha
             });
         } else if (name === 'cep') {
             if (value.length === 8) {
